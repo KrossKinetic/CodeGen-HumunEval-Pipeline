@@ -1,13 +1,10 @@
 from transformers import pipeline
 from datasets import load_dataset
-import evaluate
 import subprocess
 
 # Global Arrays for Models and Metrics
 models = ["meta-llama/Llama-3.1-8B"] 
 #,"deepseek-ai/DeepSeek-R1-Distill-Qwen-7B","Qwen/Qwen2.5-Coder-7B-Instruct"
-metrics = ["bleu","exact_match"]
-code_eval = evaluate.load(metrics[0])
 
 # Loading the primary dataset
 ds = load_dataset("THUDM/humaneval-x", "python")["test"]
@@ -71,14 +68,6 @@ def run_code(code, timeout=5):
         return result.returncode == 0  # return True if no errors, False otherwise
     except Exception as e:
         return False # return false for anything else
-
-def pass_at_1(prediction, test_cases):
-    combined_code = prediction + "\n" + test_cases
-    pass_1 = 0
-    if run_code(combined_code):
-        pass_1 = 1
-    return pass_1
-
 
 def pass_at_1(prediction, test_cases):
     combined_code = prediction + "\n" + test_cases
